@@ -1,0 +1,231 @@
+[[duck:ns e=http://projectmallard.org/experimental/]]
+
+= ITS Data Categories
+@link[guide >index]
+@desc Details on which W3C-standard ITS data categories ITS Tool supports
+
+This page lists the ITS data categories that ITS Tool supports. For
+basic information on how to use ITS Tool, see $link[>basic-usage].
+For information on how ITS interacts with PO files, see
+$link[>its-and-po]. ITS Tool also defines a number of extension
+categories and elements; see $link[>extensions] for information
+on those.
+
+$e:hi(2.0) This page contains some information specific to ITS 2.0,
+which is only supported by itstool 2.0.0 and up.
+
+
+== Translate
+   [#translate]
+
+The Translate data category specifies which elements and attributes
+should be made available for translation. Elements and attributes that
+are not translatable are still copied as-is to the localized XML
+document. To prevent elements or attributes from appearing in the
+localized document at all, use the $link[>#localefilter] data category.
+
+The Translate data category can be set globally with the
+$code(its:translateRule) rule or locally with the $code(its:translate)
+attribute. By default, elements are translatable and attributes are not.
+
+* $link[>>http://www.w3.org/TR/its20/#trans-datacat](Translate specification)
+
+
+== Elements Within Text
+   [#withintext]
+
+$e:hi(Modified in 2.0)
+
+The Elements Within Text data category specifies which elements are
+considered to be within the text run of their parent element. Generally,
+elements that are within text are inline elements. ITS Tool uses this
+information to determine how to segment the XML into messages in the PO file.
+
+The Elements Within Text data category takes three values: $code("yes"),
+$code("no"), and $code("nested"). The $code("nested") value is often used
+for footnotes, where the element is part of the textual run of the parent,
+but has its own independent flow. ITS Tool treats $code("nested") the same
+as $code("no").
+
+The Elements Within Text data category can be set globally with the
+$code(its:withinTextRule) rule or locally with the $code(its:withinText)
+attribute. By default, all elements have the value of $code("no"). Note
+that the local attribute was added in ITS 2.0.
+
+* $link[>>http://www.w3.org/TR/its20/#elements-within-text](Elements
+  Within Text specification)
+
+
+== Localization Note
+   [#locnote]
+
+The Localization Note data category provides notes to translators
+for translatable elements and attributes. ITS Tool converts these
+into comments in the PO file. At most one localization note can be
+associated with one element or attribute, but ITS Tool will also
+produce PO file comments for localization notes associated with
+inline elements included within a message.
+
+The Localization Note data category can be set globally with the
+$code(its:locNoteRule) rule or locally with the $code(its:locNote)
+or $code(its:locNoteRef) attributes, along with the optional
+$code(its:locNoteType) attribute. ITS Tool parses the localization
+note type, but currently does not do anything with it.
+
+* $link[>>http://www.w3.org/TR/its20/#locNote-datacat](Localization
+  Note specification)
+
+
+== Language Information
+
+The Language Information data category specifies the language of an
+element or attribute. It can be specified globally with the
+$code(its:langRule) rule. There is no ITS-specific local attribute,
+but it can be specified locally using the $code(xml:lang) attribute.
+
+ITS Tool does not parse language information in the source document.
+Rather, it inspects the value of the $code(langPointer) attribute,
+and if it’s a simple attribute pointer (such as $code(@lang) or
+$code(@xml:lang)), it uses that to determine the language attribute
+to create on localized output documents.
+
+* $link[>>http://www.w3.org/TR/its20/#language-information](Language
+  Information specification)
+
+
+== Preserve Space
+
+$e:hi(New in 2.0)
+
+The Preserve Space data category specifies which elements should
+preserve whitespace, such as code blocks. It can be specified
+globally with the $code(its:preserveSpaceRule) attribute or locally
+using the standard $code(xml:space) attribute. When an element is
+space-preserving, and when that element corresponds directly to a
+message, ITS Tool places the standard $code(no-wrap) marker on the
+PO message. Inline space-preserving nodes are not treated specially.
+
+For example, the built-in $link[>>http://projectmallard.org/](Mallard)
+ITS rules mark all code elements as space-preserving with the following
+rule:
+
+[code]
+<its:preserveSpaceRule space="preserve" selector="//mal:code"/>
+
+The ITS 2.0 Preserve Space data category is based in part on the
+ITS Tool 1.x $code[>extensions#preservespace] extension.
+
+* $link[>>http://www.w3.org/TR/its20/#preservespace](Preserve
+  Space specification)
+
+
+== Locale Filter
+   [#localefilter]
+
+$e:hi(New in 2.0)
+
+The Locale Filter data category allows you to exclude elements
+and attributes from appearing in localized output based the
+locale of the target localization. The Locale Filter data
+category can be set globally with the $code(its:localeFilterRule)
+rule or locally with the $code(its:localeFilterList) and optional
+$code(its:localeFilterType) attributes.
+
+The locale filter list is a comma-separated list of extended
+language ranges, as defined by
+$link[>>http://www.rfc-editor.org/rfc/bcp/bcp47.txt](BCP47). If
+the locale filter type is set to $code("include"), the element
+is only included for locales that match one of the values in the
+locale filter list. If the locale filter type is set to
+$code("exclude"), the element is included in all locales except
+those that match one of the values in the locale filter list.
+By default, the locale filter type is $code("include") and the
+locale filter list is $code("*").
+
+If the locale filter indicates that an element should not be
+included in any locales (an empty list for $code("include"), or
+$code("*") for $code("exclude")), ITS Tool will not output a
+message for that element in the PO file, hiding it completely
+from translators. Otherwise, for non-default values, ITS Tool
+will place the locale filter in a special marker comment on the
+message to advise translators. Translation tools that consume
+POT files from ITS Tool may make use of that marker comment to
+hide the message in locales that are excluded by the locale filter.
+
+When merging or joining documents, ITS Tool will not add an
+element to the result document if it is excluded by a locale
+filter for the language being processed. Exclusion when
+generating resultant XML documents is entirely independent
+of whether a message was output to a PO file.
+
+* $link[>>http://www.w3.org/TR/its20/#LocaleFilter](Locale
+  Filter specification)
+
+
+== ID Value
+   [#idvalue]
+
+$e:hi(New in 2.0)
+
+The ID Value data category allows you to associate a unique
+identifier with each element and attribute in a document. ID
+values can be computed using an XPath expression evaluated
+relative to the target node. The ID Value data category can
+be set globally with the $code(its:idValueRule0 rule. There
+is no ITS-specific local attribute. Instead, use the standard
+$code(xml:id) attribute.
+
+ITS Tool does not use the ID value for any of its own calculations.
+It places the ID in a marker comment in the PO file. This can
+help translators find content in the source documents, and may
+be used by tools that consume the POT files generated by ITS Tool.
+
+* $link[>>http://www.w3.org/TR/its20/#idvalue](ID Value specification)
+
+
+== External Resource
+   [#externalresource]
+
+$e:hi(New in 2.0)
+
+The External Resource data category specifies resources outside
+the XML document that should be translated, possibly by a separate
+procedure than the one used to translate the XML. The External
+Resource data category can be set globally with the
+$code(its:externalResourceRefRule) rule. The data category
+associates with a particular element or attribute a URL that
+identifies an external resource.
+
+ITS Tool creates a PO message for each translatable external
+resource. It does not attempt to parse external resources or
+put their contents into PO files. Rather, it calculates an MD5
+checksum for each resource and puts that in the PO file message
+along with the resource URI. ITS Tool uses the special
+$code(msgctxt "_") for all special messages that don’t correspond
+to text in the XML document.
+
+For example, the built-in $link[>>http://projectmallard.org/](Mallard)
+ITS rules contain the following:
+
+[code]
+<itst:externalResourceRefRule selector="//mal:media"
+  externalResourceRefPointer="@src"/>
+
+Here is an example of the output:
+
+[code]
+msgctxt "_"
+msgid "external ref='nautilus.png' md5='cbc3bbf0d998ed7a6567eb3b0c402195'"
+msgstr ""
+
+Translators can set the $code(msgstr) to anything they like to
+specify that they’ve created a localized copy of the file. The
+actual $code(msgstr) doesn’t matter. It’s only for tracking 
+urposes. When new external files are added, new messages will
+be added. When existing files change, their MD5 checksums will
+change, causing the msgid to change. This tells translators
+they need to update their localized copy of the file.
+
+* $link[>>http://www.w3.org/TR/its20/#externalresource](External
+  Resource specification)
+

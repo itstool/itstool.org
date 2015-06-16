@@ -1,0 +1,199 @@
+[[duck:ns e=http://projectmallard.org/experimental/]]
+
+= Extensions
+@link[guide >index]
+@desc Extensions specific to itstool for credits, external files,
+      and other useful bits
+
+Although most functionality for ITS Tool can be specified with
+standard ITS rules, there are certain features for which ITS doesn’t
+have a suitable syntax. ITS Tool supports a number of tool-specific
+extension rules. These can be used in a global rules file or in
+embedded rules. ITS Tool extensions use the namespace
+
+[code]
+http://itstool.org/extensions/
+
+This page assumes the prefix $code(itst) is bound to that URL.
+
+$e:hi(2.0) This page contains some information specific to ITS 2.0,
+which is only supported by itstool 2.0.0 and up.
+
+
+== $code(itst:match)
+   [#match]
+
+The $code(itst:match) rule specifies an XPath selector that must match
+before other rules can be applied. When processing an $code(its:rules)
+element, ITS Tool looks at each $code(itst:match) child and evaluates
+its selector attribute. If at least one of them returns a non-empty
+node set, the rules are applied. Otherwise, processing stops.
+
+For example, the built-in $link[>>http://projectmallard.org](Mallard)
+rules contain the following:
+
+[code]
+<itst:match selector="/mal:page"/>
+
+The $code(itst:match) rule helps performance. For example,
+$link[>>http://docbook.org/](DocBook) contains over 400 elements, and
+the built-in rules for DocBook contain over 150 descendant-or-self
+selectors. Using $code(itst:match) in the DocBook rules prevents
+those XPath expressions from being evaluated for non-DocBook documents.
+
+
+== $code(itst:contextRule)
+   [#context]
+
+The $code(itst:contextRule) rule and $code(itst:context) local attribute
+allow you to specify a context for a node to disambiguate it from other
+nodes with the same string value. This is managed in the PO file with
+$code(msgctxt). Most modern PO file tools support $code(msgctxt).
+
+
+== $code(itst:credits)
+   [#credits]
+
+Many structured XML document formats provide ways to credit contributors.
+To credit translators properly, new elements need to be inserted into the
+translated document. ITS Tool provides the $code(itst:credits) rule for
+this. For example, here is the built-in rule for
+$link[>>http://projectmallard.org/](Mallard):
+
+[code]
+<itst:credits appendTo="/mal:page/mal:info">
+  <mal:credit type="translator copyright">
+    <mal:name><itst:value-of select="name"/></mal:name>
+    <mal:email><itst:value-of select="email"/></mal:email>
+    <mal:years><itst:value-of select="years"/></mal:years>
+  </mal:credit>
+</itst:credits>
+
+The $code(appendTo) attribute selects an element that credits should
+be added to. If any element in the source document has been matched,
+ITS Tool will add a $code(translator-credits) message to the PO output:
+
+[code]
+msgctxt "_"
+msgid "translator-credits"
+msgstr ""
+
+The translated value is expected to be a list of credits, with one
+credit per line. Each line is of the form
+
+[code]
+NAME <EMAIL>, YEARS
+
+For each credit, ITS Tool will copy the contents of $code(itst:credits)
+into the target element, replacing each $code(itst:value-of) element
+with the corresponding value.
+
+Some formats expect each year to be in its own element. You can also
+use $code(itst:for-each) to loop over the years. For example, here is
+a snippet of the built-in $link[>>http://docbook.org/](DocBook) rule
+for credits:
+
+[code]
+<copyright>
+  <itst:for-each select="years">
+    <year><itst:value-of select="year"/></year>
+  </itst:for-each>
+  <holder><itst:value-of select="name"/></holder>
+</copyright>
+
+This assumes that the years are provided as a comma-separated list.
+
+
+== $code(itst:preserveSpaceRule)
+   [#preservespace]
+
+$e:hi(Deprecated in 2.0) Use the ITS 2.0 $link[>its#preservespace]
+data category instead.
+
+The $code(itst:preserveSpaceRule) rule specifies elements that should
+preserve whitespace, such as code blocks. The standard $code(xml:space)
+attribute can be used on individual elements. With DTDs, this can be
+applied implicitly as a $code(#FIXED) attribute. Modern schema languages,
+however, don’t modify the infoset. Adding a $code(xml:space) to each
+space-preserving element is cumbersome.
+
+For example, the built-in $link[>>http://projectmallard.org/](Mallard)
+ITS rules mark all $code(code) elements as space-preserving with the
+following rule:
+
+[code]
+<itst:preserveSpaceRule preserveSpace="yes" selector="//mal:code"/>
+
+When an element is space-preserving, and when that element corresponds
+directly to a message, ITS Tool places the standard $code(no-wrap)
+marker on the message. Note that space-preserving nodes are currently
+only handled for elements that have their own message. Inline
+space-preserving nodes are not treated specially.
+
+
+== $code(itst:dropRule)
+   [#drop]
+
+$e:hi(Deprecated in 2.0) Use the ITS 2.0 $link[>its#localefilter]
+data category instead. The functionality of $code(itst:dropRule)
+can be accomplished by setting $code(localeFilterList) to an empty
+string, or by setting $code(localeFilterType) to $code("exclude")
+and $code(localeFilterList) to $code("*").
+
+The $code(itst:dropRule) rule and $code(itst:drop) local attribute
+allow you to drop elements entirely from the translated output. No
+messages will be added to the PO file for these nodes. Unlike just
+setting the nodes to be non-translatable, dropped nodes won’t even
+appear in the merged XML. This is useful, for example, for elements
+that hold editorial comments.
+
+Use the rule as you would use $code(its:translateRule):
+
+[code]
+<page>
+  <info>
+    <itst:dropRule selector="//comment" drop="yes"/>
+  </info>
+  <comment><p>This comment is dropped</p></comment>
+</page>
+
+You can also use the $code(itst:drop) attribute on any element:
+
+[code]
+<comment itst:drop="yes"><p>This comment is dropped</p></comment>
+
+
+== $code(itst:externalRefRule)
+   [#externalref]
+
+$e:hi(Deprecated in 2.0) Use the ITS 2.0 $link[>its#externalresource]
+data category instead.
+
+XML documents often reference external files for images, videos, and
+other non-text content. Although these cannot be translated as strings
+inside PO files, ITS Tool can help you track these files with the
+$code(itst:externalRefRule) rule. The selector attribute selects nodes
+that reference external files, and the $code(refPonter) attribute selects
+the files’ URLs relative to those nodes. For example, the built-in
+$link[>>http://projectmallard.org/](Mallard) rules contain the following:
+
+[code]
+<itst:externalRefRule selector="//mal:media" refPointer="@src"/>
+
+ITS Tool will read each external file and calculate an MD5 checksum.
+It then outputs a message containing the URL and the checksum. ITS Tool
+uses the special $code(msgctxt "_") for all special messages that don’t
+correspond to text in the XML document. Here is an example of the output:
+
+[code]
+msgctxt "_"
+msgid "external ref='nautilus.png' md5='cbc3bbf0d998ed7a6567eb3b0c402195'"
+msgstr ""
+
+
+Translators can set the $code(msgstr) to anything they like to specify
+that they’ve created a localized copy of the file. The actual $code(msgstr)
+doesn’t matter. It’s only for tracking purposes. When new external files
+are added, new messages will be added. When existing files change, their
+MD5 checksums will change, causing the msgid to change. This tells
+translators they need to update their localized copy of the file.

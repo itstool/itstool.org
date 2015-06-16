@@ -1,0 +1,88 @@
+= Basic Usage
+@link[guide >index]
+@desc Create a POT file from XML and create translated XML files
+      using an MO file
+
+
+== Extract
+   [#extract]
+
+ITS Tool will scan your XML files and generate a POT (PO template)
+file. You can edit this file directory, or use tools like
+$cmd(msgmerge) to merge its messages into an existing PO file.
+To create a POT file, simply pass a list of XML files to
+$cmd(itstool) on the command line. By default, $cmd(itstool)
+simply outputs to standard output. Use the $cmd(-o) option to
+specify an output file.
+
+For example, to generate a POT file called $file(mydoc.pot) from
+all the $link[>>http://projectmallard.org/](Mallard) page files
+in a directory:
+
+[screen]
+itstool -o mydoc.pot *.page
+
+Edit this file or merge it into another PO file. The messages
+will mostly be simple inline XML fragments, like you would see
+if you were editing the source document. ITS Tool tries hard
+not to include any extra wrapper markup. You will usually only
+see the sort of basic inline markup that’s used inside paragraphs.
+Sometimes, you will see special XML markers. See $link[>its-and-po]
+for more information on these.
+
+
+== Merge
+   [#merge]
+
+After you have edited the PO file, ITS Tool can merge your
+translations with the source document to produce translated
+documents. You first need to compile the PO file into an MO
+file. You can use the standard utility $cmd(msgfmt) to create
+MO files. For example, if you copied or merged your POT file
+into a German-language $file(de.po), you can create the MO
+file $file(de.mo) with the following:
+
+[screen]
+msgfmt de.po
+
+You can then create translated output files by passing the MO
+file to $cmd(itstool) with the $cmd(-m) option. Be careful;
+ITS Tool places translated files in the current directory by
+default, which could overwrite your source files. Create a
+subdirectory first, then output pages to it:
+
+[screen]
+mkdir de
+itstool -m de.mo -o de/ *.page
+
+ITS Tool uses its built-in ITS rules by default, as well as
+any ITS rules it finds in the source document. You can also
+provide an additional ITS file on the command line with the
+$cmd(-i) option. See $link[>its-and-po] for more information
+on how ITS files are loaded.
+
+
+== Join
+   [#join]
+
+ITS Tool also provides “join mode” for creating a multilingual
+XML file, where multiple translations are provided using the
+$code(xml:lang) attribute. When using join mode, it’s common
+to maintain a monolingual version of the file along with
+translations in PO files, and to build the multilingual file
+that gets shipped. To join multiple translations, compile each
+of them into an MO file as above, then join using the
+monolingual file as a template with the following:
+
+[screen]
+itstool -j mydoc.xml.in -o mydoc.xml *.mo
+
+ITS Tool uses a simple heuristic to determine which elements
+can be repeated with the $code(xml:lang) attribute,
+corresponding exactly to the outermost translation units use
+in the PO files. A translation unit is a translatable element
+that is not within-text and which has non-trivial
+non-within-text child content. Translation units nested in
+other translation units are not repeated in join mode; their
+translated content is merged into the top-level translation
+unit, and that element is repeated.

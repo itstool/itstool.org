@@ -1,0 +1,22 @@
+= Contribute
+  @link[guide >index]
+
+ITS Tool is free and open source software under the
+$link[>>http://www.gnu.org/licenses/gpl-3.0.html](GPL 3).
+You can modify it and redistribute it all you want, provided
+all changes are under the GPL. The ITS files that ship with
+ITS Tool may be modified and redistributed without restriction.
+
+ITS Tool is hosted on GitHub. Clone the
+$link[>>https://github.com/itstool/itstool](itstool git repository)
+to get the latest work or to make changes yourself.
+
+Bugs are tracked on GitHub.
+
+ * $link[>>https://github.com/itstool/itstool/issues](View all open bugs)
+ * $link[>>https://github.com/itstool/itstool/issues/new](File a new bug)
+   (GitHub account required)
+
+ITS Tool is developed primarily by Shaun McCance. If you have any
+questions or comments, email Shaun at
+$link[>>mailto:shaunm@gnome.org](shaunm@gnome.org).

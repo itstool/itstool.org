@@ -1,0 +1,44 @@
+= Install
+@link[guide >index]
+@desc Instructions on how to install itstool from a source
+      package or the git repository
+@title[link] Installation Instructions
+
+ITS Tool uses the standard GNU build chain.
+
+[steps]
+* $link[>/download](Download itstool),
+  either from the git repository, or a package release.
+
+* If you cloned the git repository, you first need to run
+  $cmd(autogen.sh) to create the $cmd(configure) script:
+
+  [screen]
+  ./autogen.sh
+
+* Run the $cmd(configure) script:
+
+  [screen]
+  ./configure
+
+  * By default, $cmd(configure) installs packages to
+    $file(/usr/local). If you prefer to install to
+    $file(/usr), pass the $cmd(--prefix) option:
+
+    [screen]
+    ./configure --prefix=/usr
+
+* Run $cmd(make):
+
+  [screen]
+  make
+
+* As root, run $cmd(make install):
+
+  [screen]
+  su -c 'make install'
+
+  Or, on systems that use $cmd(sudo):
+
+  [screen]
+  sudo make install

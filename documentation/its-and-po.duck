@@ -1,0 +1,81 @@
+= ITS and PO
+@link[guide >index]
+@desc Details on how XML is represented in PO files, and how
+      ITS data categories affect things
+
+ITS Tool loads ITS definitions from multiple sources and applies them
+to the source document. ITS rules are loaded from the following
+locations:
+
+* The built-in rules in $file(/usr/share/itstool/its) (or elsewhere,
+  depending on your installation prefix)
+
+* Any extra ITS rules file specified by the -i command-line option
+
+* Any its:rules element embedded within the source document
+
+These are applied in the given order, and later rules take precedence
+over earlier rules. Furthermore, many ITS data categories can be
+specified explicitly using ITS attributes on elements. These always
+take precedence over information provided by rules.
+
+ITS Tool applies all matching rules, so mixed-vocabulary documents can
+be handled without any special treatment. For example, if you mix
+$link[>>http://www.w3.org/TR/ttaf1-dfxp/](TTML) into a
+$link[>>http://projectmallard.org/](Mallard) document, ITS Tool will
+apply the Mallard rules and the TTML rules.
+
+ITS Tool uses $code[>>http://www.w3.org/TR/its/#trans-datacat](its:translate)
+to decide which elements to translate. By default, all elements
+are translatable. It then breaks up all translatable content into
+translation units and creates a PO message for each translation
+unit. An element is a potential translation unit if
+$code[>>http://www.w3.org/TR/its/#elements-within-text](its:withinText)
+is not set to $code("yes") for that element. An element that contains
+only other translation units, however, is not marked for translation.
+For example, if each HTML $code(li) element is a translation unit,
+ITS Tool will not output a message for the containing $code(ul) element.
+
+Attributes are not translatable by default. Attributes on inline
+elements, however, will appear as part of the message in the PO file.
+Any attributes that have been explicitly set to be translatable and
+are not on an inline element will produce a PO file message.
+
+Inline elements that are not translation units are output as-is in the
+PO file for translation. For example, given the following XML:
+
+[code]
+<p><em>This</em> is a <link href='...'>link</link></p>
+
+The following message would be created:
+
+[code]
+msgid "<em>This</em> is a <link href='...'>link</link>"
+
+
+If a translation unit contains another translation unit, ITS Tool
+will put a special XML marker in the string for the containing
+element. Translators must keep this marker, although they may move
+it around. For example, given the following XML:
+
+[code]
+<p>Embedded <p>paragraph</p></p>
+
+The following messages would be created:
+
+[code]
+msgid "Embedded <_:p-1>"
+msgid "paragraph"
+
+This uses the special $code(_) namespace prefix, which ITS Tool
+maps to a special URI internally. Because of the way ITS Tool
+handles XML markers, source documents cannot use the $code(_)
+prefix, because it would conflict with ITS Tool. This is a known
+limitation.
+
+If a translation unit element has a localization note from
+$code[>>http://www.w3.org/TR/its/#locNote-datacat](its:locNote)
+or similar, it will be output as a comment for the PO message.
+You can specify locations for localization notes in embedded
+rules, or simply use the $code(its:locNote) attribute on any
+element to provide a comment for translators.
