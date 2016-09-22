@@ -171,7 +171,7 @@ The ID Value data category allows you to associate a unique
 identifier with each element and attribute in a document. ID
 values can be computed using an XPath expression evaluated
 relative to the target node. The ID Value data category can
-be set globally with the $code(its:idValueRule0 rule. There
+be set globally with the $code(its:idValueRule) rule. There
 is no ITS-specific local attribute. Instead, use the standard
 $code(xml:id) attribute.
 
