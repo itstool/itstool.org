@@ -8,7 +8,7 @@
    [#extract]
 
 ITS Tool will scan your XML files and generate a POT (PO template)
-file. You can edit this file directory, or use tools like
+file. You can edit this file directly, or use tools like
 $cmd(msgmerge) to merge its messages into an existing PO file.
 To create a POT file, simply pass a list of XML files to
 $cmd(itstool) on the command line. By default, $cmd(itstool)
