@@ -1,4 +1,4 @@
-[[ns e=http://projectmallard.org/experimental/]]
+@namespace e http://projectmallard.org/experimental/
 
 = Extensions
 @link[guide >index]
