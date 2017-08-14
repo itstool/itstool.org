@@ -45,6 +45,7 @@ div.logo img {
   vertical-align: bottom;
 }
 div.logo a {
+  color: </xsl:text><xsl:value-of select="$color.fg.dark"/><xsl:text>;
   border-bottom: none;
 }
 div.navbar {
@@ -57,10 +58,6 @@ div.navbar li {
   display: inline-block;
   margin: 0;
   padding: 4px 8px;
-}
-div.page {
-  max-width: 960px;
-  border: none;
 }
 </xsl:text>
 </xsl:template>
