@@ -4,6 +4,14 @@
 You can download source packages from
 $link[>>http://files.itstool.org/itstool/](files.itstool.org).
 
+* $link[>>http://files.itstool.org/itstool/itstool-2.0.3.tar.bz2](itstool 2.0.2)
+  ($link[>>http://files.itstool.org/itstool/itstool-2.0.3.tar.bz2.sha256sum](checksum))
+  * Added Python 3 support. Keeping Python 2 support for now. (Virgil Dupras)
+  * Fixed --keep-entities mode after some libxml2 changes.
+  * Added --path option for extra paths for ITS files.
+  * Don't error out (except under -s) for mismatched placeholders.
+  * Fixed UTF-8 handling for translated attributes.
+
 * $link[>>http://files.itstool.org/itstool/itstool-2.0.2.tar.bz2](itstool 2.0.2)
   ($link[>>http://files.itstool.org/itstool/itstool-2.0.2.tar.bz2.sha256sum](checksum))
   * Fixed crash in locale filter and drop rule,
