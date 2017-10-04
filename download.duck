@@ -4,7 +4,7 @@
 You can download source packages from
 $link[>>http://files.itstool.org/itstool/](files.itstool.org).
 
-* $link[>>http://files.itstool.org/itstool/itstool-2.0.3.tar.bz2](itstool 2.0.2)
+* $link[>>http://files.itstool.org/itstool/itstool-2.0.3.tar.bz2](itstool 2.0.3)
   ($link[>>http://files.itstool.org/itstool/itstool-2.0.3.tar.bz2.sha256sum](checksum))
   * Added Python 3 support. Keeping Python 2 support for now. (Virgil Dupras)
   * Fixed --keep-entities mode after some libxml2 changes.
