@@ -4,6 +4,10 @@
 You can download source packages from
 $link[>>http://files.itstool.org/itstool/](files.itstool.org).
 
+* $link[>>http://files.itstool.org/itstool/itstool-2.0.4.tar.bz2](itstool 2.0.4)
+  ($link[>>http://files.itstool.org/itstool/itstool-2.0.4.tar.bz2.sha256sum](checksum))
+  * Fixed a massive performance issue
+
 * $link[>>http://files.itstool.org/itstool/itstool-2.0.3.tar.bz2](itstool 2.0.3)
   ($link[>>http://files.itstool.org/itstool/itstool-2.0.3.tar.bz2.sha256sum](checksum))
   * Added Python 3 support. Keeping Python 2 support for now. (Virgil Dupras)
