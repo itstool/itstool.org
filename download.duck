@@ -4,6 +4,11 @@
 You can download source packages from
 $link[>>http://files.itstool.org/itstool/](files.itstool.org).
 
+* $link[>>http://files.itstool.org/itstool/itstool-2.0.6.tar.bz2](itstool 2.0.6)
+  ($link[>>http://files.itstool.org/itstool/itstool-2.0.6.tar.bz2.sha256sum](checksum))
+  * Make DocBook keyword element within text
+  * Apply ITS files passed with -i in --join mode
+
 * $link[>>http://files.itstool.org/itstool/itstool-2.0.5.tar.bz2](itstool 2.0.5)
   ($link[>>http://files.itstool.org/itstool/itstool-2.0.5.tar.bz2.sha256sum](checksum))
   * Allow preserveSpace on XML attributes (Álvaro Muñoz)
