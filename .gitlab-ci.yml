@@ -1,0 +1,18 @@
+stages:
+  - build
+  - deploy
+
+build-pintail:
+  stage: build
+  image: shaunmccance/pintail:latest
+  script:
+    - pintail build -v --local
+
+deploy-pintail:
+  stage: deploy
+  needs: ['build-pintail']
+  script:
+    - mv __pintail__/build public
+  artifacts:
+    paths:
+      - public
