@@ -5,6 +5,9 @@ stages:
 build-pintail:
   stage: build
   image: shaunmccance/pintail:latest
+  artifacts:
+    paths:
+      - __pintail__/build
   script:
     - pintail build -v --local
 
