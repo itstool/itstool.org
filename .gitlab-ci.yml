@@ -1,21 +1,27 @@
-stages:
-  - build
-  - deploy
+image: shaunmccance/pintail:latest
 
-build-pintail:
-  stage: build
-  image: shaunmccance/pintail:latest
-  artifacts:
-    paths:
-      - __pintail__/build
-  script:
-    - pintail build -v --local
+workflow:
+  rules:
+    - if: '$CI_COMMIT_BRANCH'
 
-deploy-pintail:
+pages:
   stage: deploy
-  needs: ['build-pintail']
   script:
+    - pintail build -v
     - mv __pintail__/build public
   artifacts:
     paths:
       - public
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+
+test:
+  stage: test
+  script:
+    - pintail build -v
+    - mv __pintail__/build test
+  artifacts:
+    paths:
+      - test
+  rules:
+    - if: '$CI_COMMIT_BRANCH != "master"'
