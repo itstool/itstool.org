@@ -34,32 +34,29 @@ for more information on these.
 == Merge
    [#merge]
 
-After you have edited the PO file, ITS Tool can merge your
-translations with the source document to produce translated
-documents. You first need to compile the PO file into an MO
-file. You can use the standard utility $cmd(msgfmt) to create
-MO files. For example, if you copied or merged your POT file
-into a German-language $file(de.po), you can create the MO
-file $file(de.mo) with the following:
+ITS Tool can merge edited PO files with a source file to produce a
+translated document.  Use the getttext $cmd(msgfmt) utility to convert
+the PO file into an MO file. Pass the MO file to ITS Tool with the
+$cmd(-m) option to create a translated XML file.
+
+For example, the MO file $file(de.mo) for a copied or merged
+German-language POT file $file(de.po) is created with:
 
 [screen]
 msgfmt de.po
 
-You can then create translated output files by passing the MO
-file to $cmd(itstool) with the $cmd(-m) option. Be careful;
-ITS Tool places translated files in the current directory by
-default, which could overwrite your source files. Create a
-subdirectory first, then output pages to it:
+Be careful! ITS Tool writes translated files in the current directory by
+default. This could overwrite source files. Create a subdirectory
+first, then write pages into it:
 
 [screen]
 mkdir de
 itstool -m de.mo -o de/ *.page
 
-ITS Tool uses its built-in ITS rules by default, as well as
-any ITS rules it finds in the source document. You can also
-provide an additional ITS file on the command line with the
-$cmd(-i) option. See $link[>its-and-po] for more information
-on how ITS files are loaded.
+ITS Tool has built-in rules which it combines with any ITS rules found
+in the source document. Additional files of ITS rules can be added on
+the command line with the $cmd(-i) option. See $link[>its-and-po] for
+more information on loading ITS files.
 
 
 == Join
@@ -79,10 +76,10 @@ itstool -j mydoc.xml.in -o mydoc.xml *.mo
 
 ITS Tool uses a simple heuristic to determine which elements
 can be repeated with the $code(xml:lang) attribute,
-corresponding exactly to the outermost translation units use
+corresponding exactly to the outermost translation units used
 in the PO files. A translation unit is a translatable element
 that is not within-text and which has non-trivial
 non-within-text child content. Translation units nested in
-other translation units are not repeated in join mode; their
+other translation units are not repeated in join mode. Their
 translated content is merged into the top-level translation
 unit, and that element is repeated.
